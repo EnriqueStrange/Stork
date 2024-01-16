@@ -61,10 +61,9 @@ Exploration of integrating WhatsApp chatbots for advanced client interaction and
 
 ### 5.2 Milestones
 
-- Lead extraction implementation
-- NLP model integration
-- Initial WhatsApp automation
-- Chatbot integration (future phase)
+- **Week 1:** Completed Google Maps Business Scraper (v1)
+- **Week 1:** Implemented Google Sheet Reader and Token Integration
+- **Future Phases:** NLP model integration, Initial WhatsApp automation, and Chatbot integration
 
 ### 5.3 Resources
 
@@ -127,45 +126,72 @@ Doot's technical architecture involves the integration of Google Maps APIs, NLP 
 
 ---
 
-## 10. Conclusion
+## 10. Google Maps Business Scraper Integration
 
-The Doot project has provided valuable insights into efficient lead generation and client outreach. Successes and challenges have shaped our understanding of automation in client communication. The potential integration with WhatsApp chatbots holds promising avenues for future development.
+### 10.1 Objective
+
+The integration with the Google Maps Business Scraper aims to enhance Doot's lead generation capabilities by extracting detailed business information.
+
+### 10.2 Tech Stack
+
+- Programming Language: Python
+- Web Automation Library: Playwright
+- Data Manipulation Library: Pandas
+
+### 10.3 Usage
+
+The script is executed from the command line, accepting user-provided search and location parameters, or defaulting to "dentist new york."
+
+### 10.4 Script Details
+
+The Python script utilizes Playwright to automate interactions with the Google Maps web interface, extracts business information, and saves the data to Excel and CSV files.
+
+### 10.5 Documentation
+
+The script documentation provides details on objectives, requirements, approach, and the tech stack used in the integration.
 
 ---
 
-## 11. Recommendations
+## 11. Conclusion
 
-### 11.1 Future Improvements
+The Doot project has reached its first milestone within the first week by successfully completing the Google Maps Business Scraper (v1) and implementing Google Sheet Reader and Token Integration. These achievements provide a strong foundation for further development and demonstrate the team's commitment to project timelines.
+
+---
+
+## 12. Recommendations
+
+### 12.1 Future Improvements
 
 - Streamlining chatbot integration
 - Enhancing scalability for increased lead volume
 - Exploring additional channels for client outreach
 
-### 11.2 Lessons Applied
+### 12.2 Lessons Applied
 
 - Apply lessons learned in future projects
 - Continuously update and adapt to emerging technologies
 
 ---
 
-## 12. Appendices
+## 13. Appendices
 
-### 12.1 Supporting Documents
+### 13.1 Supporting Documents
 
 - Code snippets
 - Visual representations of data
 
-### 12.2 Additional Data
+### 13.2 Additional Data
 
 - [Any Supplementary Information]
 
 ---
 
-## 13. References
+## 14. References
 
-### 13.1 Citations
+### 14.1 Citations
 
 - [Google Maps API Documentation]
 - [NLP Model Documentation]
 - [WhatsApp API Documentation]
-
+- [Playwright Documentation]
+- [Pandas Documentation]
