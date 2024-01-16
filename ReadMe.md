@@ -1,7 +1,6 @@
 # Project Development Report - Doot
 
 **Prepared By:** Priyanshu Kushwaha
-**Date:** [Date]
 
 ---
 
@@ -29,9 +28,7 @@ The project timeline spans from initial planning to the current implementation s
 
 ### 3.3 Project Team
 
-- [Your Name] - Project Lead
-- [Team Member 1] - Developer
-- [Team Member 2] - Data Analyst
+- Priyanshu Kushwaha - Project Lead
 
 ---
 
@@ -39,7 +36,7 @@ The project timeline spans from initial planning to the current implementation s
 
 ### 4.1 Lead Generation
 
-Doot utilizes Google Maps APIs for lead extraction, ensuring accurate and up-to-date information.
+Doot utilizes Google Maps scraping techniques for lead extraction, ensuring accurate and up-to-date information.
 
 ### 4.2 Message Generation
 
@@ -179,12 +176,6 @@ The Doot project has reached its first milestone within the first week by succes
 
 - Code snippets
 - Visual representations of data
-
-### 13.2 Additional Data
-
-- [Any Supplementary Information]
-
----
 
 ## 14. References
 
