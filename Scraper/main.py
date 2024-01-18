@@ -201,9 +201,11 @@ if __name__ == "__main__":
             for line in f:
                 # For Python3, use print(line)
                 city = line 
-                search_for = "Coaching" + city
                 if 'str' in line:
                     break
+                
+
+        search_for = "Coaching" + city
 
     # total number of products to scrape. Default is 10
     if args.total:
