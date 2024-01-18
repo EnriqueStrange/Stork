@@ -1,5 +1,3 @@
-"""This script serves as an example on how to use Python 
-   & Playwright to scrape/extract data from Google Maps"""
 
 from playwright.sync_api import sync_playwright
 from dataclasses import dataclass, asdict, field
@@ -62,7 +60,7 @@ def extract_coordinates_from_url(url: str) -> tuple[float,float]:
 
 def main():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
         page.goto("https://www.google.com/maps", timeout=60000)
@@ -134,7 +132,7 @@ def main():
                 name_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[1]/h1'
                 address_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[3]/button/div/div[2]/div[1]'
                 website_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[5]/a/div/div[2]/div[1]'
-                phone_number_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[7]/button/div'
+                phone_number_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[5]/button/div/div[2]/div[1]'
 
 
 
@@ -196,14 +194,21 @@ if __name__ == "__main__":
     if args.search:
         search_for = args.search
     else:
+        #Extacting list of cities form text file 
         # in case no arguments passed
-        # the scraper will search by defaukt for:
-        search_for = "dentist new york"
+        # the scraper will search by defaut for keyword added:
+        with open('cities.txt') as f:
+            for line in f:
+                # For Python3, use print(line)
+                city = line 
+                search_for = "Coaching" + city
+                if 'str' in line:
+                    break
 
     # total number of products to scrape. Default is 10
     if args.total:
         total = args.total
     else:
-        total = 10
+        total = 5000
 
     main()
