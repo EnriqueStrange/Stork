@@ -39,28 +39,32 @@ class BusinessList:
         )
 
     def save_to_excel(self, filename):
-            """saves pandas dataframe to excel (xlsx) file, appends data if file exists
+        """saves pandas dataframe to excel (xlsx) file
 
-            Args:
-                filename (str): filename
-            """
-            file_path = f"{filename}.xlsx"
-            if os.path.exists(file_path):
-                self.dataframe().to_excel(file_path, index=False, mode='a', header=not os.path.getsize(file_path))
-            else:
-                self.dataframe().to_excel(file_path, index=False)
+        Args:
+            filename (str): filename
+        """
+        file_path = f"{filename}.xlsx"
+        if os.path.exists(file_path):
+            existing_data = pd.read_excel(file_path)
+            updated_data = pd.concat([existing_data, self.dataframe()], ignore_index=True)
+            updated_data.to_excel(file_path, index=False)
+        else:
+            self.dataframe().to_excel(file_path, index=False)
 
     def save_to_csv(self, filename):
-            """saves pandas dataframe to csv file, appends data if file exists
+        """saves pandas dataframe to csv file
 
-            Args:
-                filename (str): filename
-            """
-            file_path = f"{filename}.csv"
-            if os.path.exists(file_path):
-                self.dataframe().to_csv(file_path, index=False, mode='a', header=not os.path.getsize(file_path))
-            else:
-                self.dataframe().to_csv(file_path, index=False)
+        Args:
+            filename (str): filename
+        """
+        file_path = f"{filename}.csv"
+        if os.path.exists(file_path):
+            existing_data = pd.read_csv(file_path)
+            updated_data = pd.concat([existing_data, self.dataframe()], ignore_index=True)
+            updated_data.to_csv(file_path, index=False)
+        else:
+            self.dataframe().to_csv(file_path, index=False)
 
 def extract_coordinates_from_url(url: str) -> tuple[float,float]:
     """helper function to extract coordinates from url"""
@@ -78,7 +82,7 @@ def main():
                 print (city)
                 
 
-                browser = p.chromium.launch(headless=True)
+                browser = p.chromium.launch(headless=False)
                 page = browser.new_page()
 
                 page.goto("https://www.google.com/maps", timeout=60000)
