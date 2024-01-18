@@ -38,29 +38,29 @@ class BusinessList:
             (asdict(business) for business in self.business_list), sep="_"
         )
 
-def save_to_excel(self, filename):
-        """saves pandas dataframe to excel (xlsx) file, appends data if file exists
+    def save_to_excel(self, filename):
+            """saves pandas dataframe to excel (xlsx) file, appends data if file exists
 
-        Args:
-            filename (str): filename
-        """
-        file_path = f"{filename}.xlsx"
-        if os.path.exists(file_path):
-            self.dataframe().to_excel(file_path, index=False, mode='a', header=not os.path.getsize(file_path))
-        else:
-            self.dataframe().to_excel(file_path, index=False)
+            Args:
+                filename (str): filename
+            """
+            file_path = f"{filename}.xlsx"
+            if os.path.exists(file_path):
+                self.dataframe().to_excel(file_path, index=False, mode='a', header=not os.path.getsize(file_path))
+            else:
+                self.dataframe().to_excel(file_path, index=False)
 
-def save_to_csv(self, filename):
-        """saves pandas dataframe to csv file, appends data if file exists
+    def save_to_csv(self, filename):
+            """saves pandas dataframe to csv file, appends data if file exists
 
-        Args:
-            filename (str): filename
-        """
-        file_path = f"{filename}.csv"
-        if os.path.exists(file_path):
-            self.dataframe().to_csv(file_path, index=False, mode='a', header=not os.path.getsize(file_path))
-        else:
-            self.dataframe().to_csv(file_path, index=False)
+            Args:
+                filename (str): filename
+            """
+            file_path = f"{filename}.csv"
+            if os.path.exists(file_path):
+                self.dataframe().to_csv(file_path, index=False, mode='a', header=not os.path.getsize(file_path))
+            else:
+                self.dataframe().to_csv(file_path, index=False)
 
 def extract_coordinates_from_url(url: str) -> tuple[float,float]:
     """helper function to extract coordinates from url"""
