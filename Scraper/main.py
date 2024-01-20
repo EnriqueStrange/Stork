@@ -82,7 +82,7 @@ def main():
                 print (city)
                 
 
-                browser = p.chromium.launch(headless=False)
+                browser = p.chromium.launch(headless=True)
                 page = browser.new_page()
 
                 page.goto("https://www.google.com/maps", timeout=60000)
@@ -150,12 +150,12 @@ def main():
                         listing.click()
                         page.wait_for_timeout(5000)
                         
-                        reviews_span_xpath = '//span[@role="img"]'
-                        name_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[1]/h1'
+                        
+                        name_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[1]'
                         address_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[3]/button/div/div[2]/div[1]'
                         website_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[5]/a/div/div[2]/div[1]'
                         phone_number_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[7]/button/div'
-
+                        reviews_span_xpath = 'Add xpath '
 
 
                         business = Business()
@@ -219,7 +219,7 @@ if __name__ == "__main__":
         search_for = args.search
     else:
         # in case no arguments passed
-        # the scraper will search by defaukt for:
+        # the scraper will search by defaut for:
         search_for = "Coaching "
 
 
@@ -227,6 +227,6 @@ if __name__ == "__main__":
     if args.total:
         total = args.total
     else:
-        total = 5000
+        total = 1000
 
     main()
