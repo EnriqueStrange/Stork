@@ -87,13 +87,13 @@ def main():
 
                 page.goto("https://www.google.com/maps", timeout=60000)
                 # wait is added for dev phase. can remove it in production
-                page.wait_for_timeout(5000)
+                # page.wait_for_timeout(5000)
 
                 page.locator('//input[@id="searchboxinput"]').fill(search_for + city)
-                page.wait_for_timeout(3000)
+                # page.wait_for_timeout(3000)
 
                 page.keyboard.press("Enter")
-                page.wait_for_timeout(5000)
+                # page.wait_for_timeout(5000)
 
                 # scrolling
                 page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
