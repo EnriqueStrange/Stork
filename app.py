@@ -1,5 +1,5 @@
-import tkinter as tk
-from tkinter import ttk, scrolledtext, messagebox
+import customtkinter as ctk
+from tkinter import Entry, filedialog
 from threading import Thread, Event
 from playwright.sync_api import sync_playwright
 from dataclasses import dataclass, asdict, field
@@ -177,62 +177,63 @@ def main(search_for, total, stop_event):
                 if 'str' in city:
                     break
 
-class GoogleMapsScraperApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Google Maps Scraper")
+class Stork(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.geometry()
+        self.title("Stork")
+        ctk.set_appearance_mode("system")
+        self.configure(fg_color=("#d1dadb", "#262833")) 
+        self.grid_rowconfigure(0, weight=1)  # configure grid system
+        self.grid_columnconfigure(0, weight=1)
 
-        # Set to full screen while maintaining aspect ratio
-        self.root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+        self.tab = ctk.CTkTabview(master=self, fg_color=("#84b898","#4b4c56"), width=400, height=600)
+        self.tab.pack(padx=20, pady=20)
 
-        self.search_label = ttk.Label(root, text="Search Keyword:")
-        self.search_entry = ttk.Entry(root)
+        self.tab.add("Scraper")
+        self.tab.add("Texter")
+        self.tab.add("Editor")
 
-        self.total_label = ttk.Label(root, text="Total Listings to Scrape:")
-        self.total_entry = ttk.Entry(root)
+        def get_file_name():
+            filename = filedialog.askopenfilename(initialdir = "/",
+                                                title = "Select a File",
+                                                filetypes = (("Text files",
+                                                                "*.txt*"),
+                                                            ("all files",
+                                                                "*.*")))
 
-        self.scrape_button = ttk.Button(root, text="Scrape", command=self.scrape_google_maps)
-        self.stop_button = ttk.Button(root, text="Stop", command=self.stop_scraping)
+        
+        self.keywordBox = ctk.CTkEntry(master=self.tab.tab("Scraper"), placeholder_text="Enter Keyword", width=300, fg_color="transparent", text_color=("#3a3d46","#a6a7ac"), placeholder_text_color=("#3a3d46","#a6a7ac"))
+        self.keywordBox.place(relx=0.5, rely=0.15, anchor="center")
 
-        self.output_text = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=15)
+        self.listCount = ctk.CTkEntry(master=self.tab.tab("Scraper"), placeholder_text="Total listing to scrape", width=300, fg_color="transparent", text_color=("#3a3d46","#a6a7ac"), placeholder_text_color=("#3a3d46","#a6a7ac"))
+        self.listCount.place(relx=0.5, rely=0.22, anchor="center")
 
-        self.search_label.pack(pady=10)
-        self.search_entry.pack(pady=5)
-        self.total_label.pack(pady=10)
-        self.total_entry.pack(pady=5)
-        self.scrape_button.pack(pady=10)
-        self.stop_button.pack(pady=5)
-        self.output_text.pack(pady=10)
+        self.locFile = ctk.CTkButton(master=self.tab.tab("Scraper"), text="Select Location file", fg_color="transparent", hover_color=("#84b898","#84b898"), text_color=("#e5ede8"), border_color= "#e5ede8", border_width=1 , command=lambda: get_file_name())
+        self.locFile.place(relx=0.5, rely=0.28, anchor="center")
 
-        self.stop_event = Event()
 
-    def scrape_google_maps(self):
-        search_query = self.search_entry.get()
-        total_listings = int(self.total_entry.get()) if self.total_entry.get() else 1000
+        self.scrapeBtn = ctk.CTkButton(master=self.tab.tab("Scraper"), text="Scrape", fg_color=("#e5ede8", "#e5ede8"), hover_color=("#84b898","#84b898"), text_color=("#1d1f2b"))
+        self.scrapeBtn.place(relx=0.305, rely=0.38, anchor="center")
 
-        if not search_query:
-            messagebox.showinfo("Error", "Please enter a search keyword.")
-            return
+        self.stopscrapeBtn = ctk.CTkButton(master=self.tab.tab("Scraper"), text="Stop", fg_color=("#e5ede8", "#e5ede8"), hover_color=("#84b898","#84b898"), text_color=("#1d1f2b"))
+        self.stopscrapeBtn.place(relx=0.685, rely=0.38, anchor="center")
 
-        self.output_text.delete(1.0, tk.END)
-        self.output_text.insert(tk.END, "Scraping in progress...\n")
+        self.scraperOp = ctk.CTkTextbox(master=self.tab.tab("Scraper"), width=350, corner_radius=15, fg_color=("#d1dadb", "#262833"), padx=10, pady=10)
+        self.scraperOp.place(relx=0.5, rely=0.72, anchor="center")
+        self.scraperOp.insert("0.0", "Some example text!\n")
 
-        def scrape_thread():
-            try:
-                self.stop_event.clear()
-                main(search_query, total_listings, self.stop_event)
-                self.output_text.insert(tk.END, "Scraping completed.\n")
-            except Exception as e:
-                self.output_text.insert(tk.END, f"Error: {str(e)}\n")
+        def button_click():
+            print("pressed")
 
-        scraper_thread = Thread(target=scrape_thread)
-        scraper_thread.start()
-
-    def stop_scraping(self):
-        self.stop_event.set()
-        self.output_text.insert(tk.END, "Scraping stopped.\n")
+        
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = GoogleMapsScraperApp(root)
-    root.mainloop()
+    app = Stork()
+    app.geometry("500x700")
+    # set minimum window size value
+    app.minsize(500, 700)
+    
+    # set maximum window size value
+    app.maxsize(500, 700)
+    app.mainloop()

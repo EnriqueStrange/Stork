@@ -73,7 +73,7 @@ def extract_coordinates_from_url(url: str) -> tuple[float,float]:
     # return latitude, longitude
     return float(coordinates.split(',')[0]), float(coordinates.split(',')[1])
 
-def main():
+def scraper():
     with sync_playwright() as p:
 
         with open('cities.txt') as f:
@@ -229,4 +229,4 @@ if __name__ == "__main__":
     else:
         total = 1000
 
-    main()
+    scraper()
