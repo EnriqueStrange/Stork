@@ -181,7 +181,9 @@ class GoogleMapsScraperApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Google Maps Scraper")
-        self.root.geometry("500x400")
+
+        # Set to full screen while maintaining aspect ratio
+        self.root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 
         self.search_label = ttk.Label(root, text="Search Keyword:")
         self.search_entry = ttk.Entry(root)
