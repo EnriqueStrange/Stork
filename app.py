@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify
+import tkinter as tk
+from tkinter import ttk, scrolledtext, messagebox
+from threading import Thread, Event
 from playwright.sync_api import sync_playwright
 from dataclasses import dataclass, asdict, field
 import pandas as pd
 import os
-
-app = Flask(__name__)
 
 @dataclass
 class Business:
@@ -44,30 +44,35 @@ class BusinessList:
         else:
             self.dataframe().to_csv(file_path, index=False)
 
-def extract_coordinates_from_url(url: str) -> tuple[float,float]:
+def extract_coordinates_from_url(url: str) -> tuple[float, float]:
     coordinates = url.split('/@')[-1].split('/')[0]
     return float(coordinates.split(',')[0]), float(coordinates.split(',')[1])
 
-@app.route('/scrape', methods=['POST'])
-def scrape_google_maps():
-    data = request.get_json()
-
-    search_for = data.get('search', 'Coaching')
-    total = data.get('total', 1000)
-
-    business_list = BusinessList()
-
+def main(search_for, total, stop_event):
     with sync_playwright() as p:
         with open('cities.txt') as f:
             for city in f:
+                if stop_event.is_set():
+                    break
+
+                print(city)
+
                 browser = p.chromium.launch(headless=True)
                 page = browser.new_page()
+
                 page.goto("https://www.google.com/maps", timeout=60000)
+
                 page.locator('//input[@id="searchboxinput"]').fill(search_for + city)
+
                 page.keyboard.press("Enter")
+
+                page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
 
                 previously_counted = 0
                 while True:
+                    if stop_event.is_set():
+                        break
+
                     page.mouse.wheel(0, 10000)
                     page.wait_for_timeout(3000)
 
@@ -106,11 +111,16 @@ def scrape_google_maps():
                                 ).count(),
                             )
 
+                business_list = BusinessList()
+
                 for listing in listings:
                     try:
+                        if stop_event.is_set():
+                            break
+
                         listing.click()
                         page.wait_for_timeout(5000)
-                        
+
                         name_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[1]'
                         address_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[3]/button/div/div[2]/div[1]'
                         website_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[5]/a/div/div[2]/div[1]'
@@ -147,13 +157,13 @@ def scrape_google_maps():
                                 listing.locator(reviews_span_xpath).all()[0]
                                 .get_attribute("aria-label")
                                 .split()[2]
-                                .replace(',','')
+                                .replace(',', '')
                                 .strip()
                             )
                         else:
                             business.reviews_average = ""
                             business.reviews_count = ""
-                        
+
                         business.latitude, business.longitude = extract_coordinates_from_url(page.url)
 
                         business_list.business_list.append(business)
@@ -167,7 +177,60 @@ def scrape_google_maps():
                 if 'str' in city:
                     break
 
-    return jsonify({'message': 'Scraping completed successfully!', 'data': asdict(business_list)})
+class GoogleMapsScraperApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Google Maps Scraper")
+        self.root.geometry("500x400")
+
+        self.search_label = ttk.Label(root, text="Search Keyword:")
+        self.search_entry = ttk.Entry(root)
+
+        self.total_label = ttk.Label(root, text="Total Listings to Scrape:")
+        self.total_entry = ttk.Entry(root)
+
+        self.scrape_button = ttk.Button(root, text="Scrape", command=self.scrape_google_maps)
+        self.stop_button = ttk.Button(root, text="Stop", command=self.stop_scraping)
+
+        self.output_text = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=15)
+
+        self.search_label.pack(pady=10)
+        self.search_entry.pack(pady=5)
+        self.total_label.pack(pady=10)
+        self.total_entry.pack(pady=5)
+        self.scrape_button.pack(pady=10)
+        self.stop_button.pack(pady=5)
+        self.output_text.pack(pady=10)
+
+        self.stop_event = Event()
+
+    def scrape_google_maps(self):
+        search_query = self.search_entry.get()
+        total_listings = int(self.total_entry.get()) if self.total_entry.get() else 1000
+
+        if not search_query:
+            messagebox.showinfo("Error", "Please enter a search keyword.")
+            return
+
+        self.output_text.delete(1.0, tk.END)
+        self.output_text.insert(tk.END, "Scraping in progress...\n")
+
+        def scrape_thread():
+            try:
+                self.stop_event.clear()
+                main(search_query, total_listings, self.stop_event)
+                self.output_text.insert(tk.END, "Scraping completed.\n")
+            except Exception as e:
+                self.output_text.insert(tk.END, f"Error: {str(e)}\n")
+
+        scraper_thread = Thread(target=scrape_thread)
+        scraper_thread.start()
+
+    def stop_scraping(self):
+        self.stop_event.set()
+        self.output_text.insert(tk.END, "Scraping stopped.\n")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    root = tk.Tk()
+    app = GoogleMapsScraperApp(root)
+    root.mainloop()
