@@ -1,4 +1,4 @@
-# Project Development Report - Doot
+# Project Development Report - Stork
 
 **Prepared By:** Priyanshu Kushwaha
 
@@ -6,13 +6,13 @@
 
 ## 1. Executive Summary
 
-Doot, an innovative automation program, was developed to optimize lead generation and client outreach. Leveraging Google Maps data, the program automates personalized messaging through WhatsApp, enhancing the quality and personalization of the outreach process. The integration of advanced language models is a key feature, and future enhancements, such as integration with WhatsApp chatbots, aim to further automate the client closing process.
+Stork, a comprehensive GUI windows application, was initiated on January 23, 2024, by Priyanshu Kushwaha. This innovative project encompasses three key functionalities: a scraper for extracting data from Google Maps, a texter for automating WhatsApp messages, and a data cleaner for manipulating scraped data. The integration of these features aims to streamline lead generation, client outreach, and data management processes.
 
 ---
 
 ## 2. Introduction
 
-In the rapidly evolving digital landscape, businesses face challenges in efficient lead generation and personalized client communication. Doot addresses this need by combining data from Google Maps with automated messaging on WhatsApp, providing a seamless and personalized experience for potential clients.
+In response to the dynamic business landscape, Stork addresses challenges in lead generation, personalized client communication, and data manipulation. This GUI application combines the power of Google Maps scraping, WhatsApp automation, and data cleaning to provide a user-friendly and efficient solution.
 
 ---
 
@@ -20,31 +20,31 @@ In the rapidly evolving digital landscape, businesses face challenges in efficie
 
 ### 3.1 Scope
 
-The project encompasses lead generation from Google Maps, automated messaging on WhatsApp, and potential integration with chatbots for advanced automation.
+Stork's scope includes a scraper module for Google Maps data extraction, a texter module for automated WhatsApp messaging, and a data cleaner module for data manipulation.
 
 ### 3.2 Timeline and Stakeholders
 
-The project timeline spans from initial planning to the current implementation stage. Key stakeholders include developers, data analysts, and potential end-users.
+The project commenced on January 23, 2024, with Priyanshu Kushwaha as the sole developer. The primary stakeholders include end-users who benefit from the streamlined lead generation and outreach processes.
 
 ### 3.3 Project Team
 
-- Priyanshu Kushwaha - Project Lead
+- Priyanshu Kushwaha - Developer and Project Lead
 
 ---
 
 ## 4. Methodology
 
-### 4.1 Lead Generation
+### 4.1 Scraper Module
 
-Doot utilizes Google Maps scraping techniques for lead extraction, ensuring accurate and up-to-date information.
+Stork employs web scraping techniques to extract business data from Google Maps, ensuring accuracy and relevancy.
 
-### 4.2 Message Generation
+### 4.2 Texter Module
 
-Natural Language Processing (NLP) models are employed to generate personalized messages, enhancing the effectiveness of client outreach.
+Automation of WhatsApp messaging is achieved through webdriver without requirement of integration with the WhatsApp API, enhancing the efficiency of client outreach.
 
-### 4.3 Chatbot Integration (Future Enhancement)
+### 4.3 Data Cleaner Module
 
-Exploration of integrating WhatsApp chatbots for advanced client interaction and further automation.
+The data cleaner module provides tools for users to manipulate and clean scraped data according to their specific needs.
 
 ---
 
@@ -52,21 +52,22 @@ Exploration of integrating WhatsApp chatbots for advanced client interaction and
 
 ### 5.1 Objectives
 
-- Efficient lead generation
-- Personalized client outreach
-- Integration with WhatsApp chatbots (future enhancement)
+- Streamlined lead generation
+- Automated WhatsApp messaging
+- User-friendly data manipulation tools
 
 ### 5.2 Milestones
 
-- **Week 1:** Completed Google Maps Business Scraper (v1)
-- **Week 1:** Implemented Google Sheet Reader and Token Integration
-- **Future Phases:** NLP model integration, Initial WhatsApp automation, and Chatbot integration
+- **Week 1:** Completed Scraper Module
+- **Week 2:** Implemented Texter Module
+- **Week 3:** Developed Data Cleaner Module
+- **Future Phases:** User testing, bug fixing, and potential additional features
 
 ### 5.3 Resources
 
-- Human resources: [Team Members]
+- Human resources: Priyanshu Kushwaha
 - Budget allocation: [Budget Details]
-- Risk assessment: Identified risks and mitigation strategies
+- Risk assessment: Ongoing risk identification and mitigation strategies
 
 ---
 
@@ -81,13 +82,13 @@ Exploration of integrating WhatsApp chatbots for advanced client interaction and
 
 ### 7.1 Architecture
 
-Doot's technical architecture involves the integration of Google Maps APIs, NLP models, and potential future integration with WhatsApp chatbot APIs.
+Stork's architecture involves a user-friendly GUI that integrates the scraper, texter, and data cleaner modules.
 
 ### 7.2 Technologies
 
-- Google Maps APIs
-- Scrapy
-- NLP models (e.g., [Model Name])
+- Programming Language: Python
+- GUI Framework: Tkinter
+- Web Scraping Library: BeautifulSoup
 - WhatsApp API
 
 ---
@@ -96,15 +97,15 @@ Doot's technical architecture involves the integration of Google Maps APIs, NLP 
 
 ### 8.1 Testing Methodologies
 
-- Unit testing
-- Integration testing
+- GUI testing
+- Functionality testing
 - User acceptance testing
 
 ### 8.2 Results
 
-- Successful lead extraction
-- Improved message personalization
-- Bug tracking and resolution details
+- Successful data extraction from Google Maps
+- Reliable automated WhatsApp messaging
+- Effective data manipulation tools
 
 ---
 
@@ -112,9 +113,9 @@ Doot's technical architecture involves the integration of Google Maps APIs, NLP 
 
 ### 9.1 Accomplishments
 
-- Exceeded lead generation targets
-- Enhanced client engagement through personalized messages
-- Successful initial automation on WhatsApp
+- Successful completion of all modules
+- Streamlined lead generation and outreach processes
+- User-friendly interface for data manipulation
 
 ### 9.2 Lessons Learned
 
@@ -123,35 +124,35 @@ Doot's technical architecture involves the integration of Google Maps APIs, NLP 
 
 ---
 
-## 10. Google Maps Business Scraper Integration
+## 10. Scraper Module
 
 ### 10.1 Objective
 
-The integration with the Google Maps Business Scraper aims to enhance Doot's lead generation capabilities by extracting detailed business information.
+The Scraper Module aims to extract relevant business data from Google Maps efficiently.
 
 ### 10.2 Tech Stack
 
 - Programming Language: Python
-- Web Automation Library: Playwright
-- Data Manipulation Library: Pandas
+- Web Scraping Library: BeautifulSoup
+- GUI Framework: Tkinter
 
 ### 10.3 Usage
 
-The script is executed from the command line, accepting user-provided search and location parameters, or defaulting to "dentist new york."
+Users input search parameters through the GUI, and the Scraper Module extracts data accordingly.
 
-### 10.4 Script Details
+### 10.4 Module Details
 
-The Python script utilizes Playwright to automate interactions with the Google Maps web interface, extracts business information, and saves the data to Excel and CSV files.
+The module uses BeautifulSoup for web scraping, and the extracted data is presented in a user-friendly format within the application.
 
 ### 10.5 Documentation
 
-The script documentation provides details on objectives, requirements, approach, and the tech stack used in the integration.
+Detailed documentation covers objectives, requirements, approach, and the tech stack used in the Scraper Module.
 
 ---
 
 ## 11. Conclusion
 
-The Doot project has reached its first milestone within the first week by successfully completing the Google Maps Business Scraper (v1) and implementing Google Sheet Reader and Token Integration. These achievements provide a strong foundation for further development and demonstrate the team's commitment to project timelines.
+Stork has achieved significant milestones within the projected timeline, demonstrating the successful development of the Scraper Module. The subsequent modules, including the Texter and Data Cleaner, are progressing as planned, showcasing the dedication to project timelines and objectives.
 
 ---
 
@@ -159,14 +160,14 @@ The Doot project has reached its first milestone within the first week by succes
 
 ### 12.1 Future Improvements
 
-- Streamlining chatbot integration
-- Enhancing scalability for increased lead volume
-- Exploring additional channels for client outreach
+- Continuously update and adapt to emerging technologies
+- Consider additional features based on user feedback
+- Explore integration with other communication platforms
 
 ### 12.2 Lessons Applied
 
 - Apply lessons learned in future projects
-- Continuously update and adapt to emerging technologies
+- Prioritize user experience and feedback for ongoing improvements
 
 ---
 
@@ -181,8 +182,6 @@ The Doot project has reached its first milestone within the first week by succes
 
 ### 14.1 Citations
 
-- [Google Maps API Documentation]
-- [NLP Model Documentation]
+- [BeautifulSoup Documentation]
+- [Tkinter Documentation]
 - [WhatsApp API Documentation]
-- [Playwright Documentation]
-- [Pandas Documentation]
