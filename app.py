@@ -62,7 +62,6 @@ class Stork(ctk.CTk):
                                        hover_color=("#84b898", "#84b898"), text_color=("#1d1f2b"), command=self.downloadtxt)
         self.downloadCSV.place(relx=0.5, rely=0.91, anchor="center")
 
-
     def on_window_close(self):
         self.stop_flag.set()  # Set the stop flag when the window is closed
         self.destroy()
@@ -86,6 +85,8 @@ class Stork(ctk.CTk):
     def stop_scraping(self):
         try:
             self.stop_flag.set()
+            self.downloadtxt()  # Call downloadtxt function when stop button is pressed
+            self.scraperOp.delete("0.0", ctk.END)  # Reset the scraperOp field
         except Exception as e:
             self.display_error(f"Error while stopping scraping: {e}")
 
@@ -97,7 +98,7 @@ class Stork(ctk.CTk):
 
     def get_file_location_for_cities(self):
         return self.locationoutput.get(0.1, ctk.END)
-    
+
     def downloadtxt(self):
         text_content = self.scraperOp.get(0.1, ctk.END)
 
@@ -113,7 +114,7 @@ class Stork(ctk.CTk):
             with open(file_path, 'w') as file:
                 file.write(text_content)
 
-            self.scraperOp.insert(f"File saved successfully at: {file_path}")
+            self.scraperOp.insert("0.0", f"File saved successfully at: {file_path}")
         except Exception as e:
             print(f"Error saving file: {e}")
 
@@ -126,18 +127,16 @@ class Stork(ctk.CTk):
             total_listings = self.get_listcount()
             cities_file_path = self.get_file_location_for_cities()
 
-            scraped_data = scrape_google_maps_data(keyword, total_listings, cities_file_path, self.stop_flag, self.update_scraper_op)
-
-            if scraped_data:
-                self.scraperOp.delete("0.0", ctk.END)
-                self.scraperOp.insert("0.0", scraped_data.dataframe().to_string(index=False))
+            for data in scrape_google_maps_data(keyword, total_listings, cities_file_path, self.stop_flag, self.update_scraper_op):
+                self.update_scraper_op(data)
         except Exception as e:
             self.display_error(f"Error during scraping: {e}")
         finally:
             self.scrapeBtn.configure(state="normal")
 
     def update_scraper_op(self, data):
-        self.scraperOp.insert("0.0", f"{data}\n")
+        self.scraperOp.insert(0.1, f"{data}\n")
+
 
 
 if __name__ == "__main__":

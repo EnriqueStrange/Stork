@@ -5,7 +5,6 @@ from playwright.sync_api import sync_playwright
 
 @dataclass
 class Business:
-    website: str = None
     phone_number: str = None
 
 @dataclass
@@ -15,8 +14,7 @@ class BusinessList:
     def text_representation(self):
         result = ""
         for business in self.business_list:
-            result += f"Website: {business.website}\n"
-            result += f"Phone Number: {business.phone_number}\n\n"
+            result += f"{business.phone_number}\n\n"
         return result.strip()
 
 stop_flag = threading.Event()
@@ -98,24 +96,16 @@ def scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag
                             listing.click()
                             page.wait_for_timeout(5000)
 
-                            website_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[5]/a/div/div[2]/div[1]'
                             phone_number_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[7]/button/div'
 
                             business = Business()
 
-                            if page.locator(website_xpath).count() > 0:
-                                business.website = page.locator(website_xpath).all()[0].inner_text()
-                            else:
-                                business.website = ""
                             if page.locator(phone_number_xpath).count() > 0:
                                 business.phone_number = page.locator(phone_number_xpath).all()[0].inner_text()
-                            else:
-                                pass
+                                business_list.business_list.append(business)
 
-                            business_list.business_list.append(business)
-
-                            # Update UI with the scraped data
-                            update_callback(business_list.text_representation())
+                                # Update UI with the scraped data
+                                update_callback(business_list.text_representation())
 
                         except Exception as e:
                             print(e)
