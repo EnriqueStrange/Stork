@@ -1,31 +1,37 @@
+import threading
 from dataclasses import dataclass, asdict, field
 import pandas as pd
-import threading
 from playwright.sync_api import sync_playwright
+
+stop_flag = threading.Event()
 
 @dataclass
 class Business:
+    name: str = None
+    address: str = None
     website: str = None
     phone_number: str = None
+    reviews_count: int = None
+    reviews_average: float = None
+    latitude: float = None
+    longitude: float = None
 
 @dataclass
 class BusinessList:
     business_list: list[Business] = field(default_factory=list)
 
-    def text_representation(self):
-        result = ""
-        for business in self.business_list:
-            result += f"Website: {business.website}\n"
-            result += f"Phone Number: {business.phone_number}\n\n"
-        return result.strip()
-
-stop_flag = threading.Event()
+    def dataframe(self):
+        return pd.json_normalize(asdict(business) for business in self.business_list)
 
 def stop_scraping():
     stop_flag.set()
 
 def reset_stop_flag():
     stop_flag.clear()
+
+def extract_coordinates_from_url(url: str) -> tuple[float, float]:
+    coordinates = url.split('/@')[-1].split('/')[0]
+    return float(coordinates.split(',')[0]), float(coordinates.split(',')[1])
 
 def scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag, update_callback):
     try:
@@ -98,11 +104,22 @@ def scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag
                             listing.click()
                             page.wait_for_timeout(5000)
 
+                            name_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[1]'
+                            address_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[3]/button/div/div[2]/div[1]'
                             website_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[5]/a/div/div[2]/div[1]'
                             phone_number_xpath = '//*[@id="QA0Szd"]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[7]/div[7]/button/div'
+                            reviews_span_xpath = 'Add xpath '
 
                             business = Business()
 
+                            if listing.locator(name_xpath).count() > 0:
+                                business.name = listing.locator(name_xpath).all()[0].inner_text()
+                            else:
+                                business.name = ""
+                            if page.locator(address_xpath).count() > 0:
+                                business.address = page.locator(address_xpath).all()[0].inner_text()
+                            else:
+                                business.address = ""
                             if page.locator(website_xpath).count() > 0:
                                 business.website = page.locator(website_xpath).all()[0].inner_text()
                             else:
@@ -110,12 +127,32 @@ def scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag
                             if page.locator(phone_number_xpath).count() > 0:
                                 business.phone_number = page.locator(phone_number_xpath).all()[0].inner_text()
                             else:
-                                pass
+                                business.phone_number = ""
+                            if listing.locator(reviews_span_xpath).count() > 0:
+                                business.reviews_average = float(
+                                    listing.locator(reviews_span_xpath).all()[0]
+                                    .get_attribute("aria-label")
+                                    .split()[0]
+                                    .replace(",", ".")
+                                    .strip()
+                                )
+                                business.reviews_count = int(
+                                    listing.locator(reviews_span_xpath).all()[0]
+                                    .get_attribute("aria-label")
+                                    .split()[2]
+                                    .replace(',','')
+                                    .strip()
+                                )
+                            else:
+                                business.reviews_average = ""
+                                business.reviews_count = ""
+
+                            business.latitude, business.longitude = extract_coordinates_from_url(page.url)
 
                             business_list.business_list.append(business)
 
                             # Update UI with the scraped data
-                            update_callback(business_list.text_representation())
+                            update_callback(business_list.dataframe().to_string(index=False))
 
                         except Exception as e:
                             print(e)
@@ -129,3 +166,18 @@ def scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag
     except Exception as e:
         print(f"Error during scraping: {e}")
         return None
+
+def main():
+    keyword = "your_keyword_here"  # Replace with your desired keyword
+    total_listings = 10  # Replace with the desired number of listings to scrape
+    cities_file_path = "path/to/cities.txt"  # Replace with the path to your cities file
+    stop_flag.clear()
+
+    def update_callback(data):
+        # Add your code to update the UI or handle the scraped data as needed
+        print(data)
+
+    scraped_data = scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag, update_callback)
+
+if __name__ == "__main__":
+    main()

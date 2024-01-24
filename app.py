@@ -59,7 +59,7 @@ class Stork(ctk.CTk):
         self.scraperOp.insert("0.0", ">>\n")
 
         self.downloadCSV = ctk.CTkButton(master=self.tab.tab("Scraper"), text="Download txt", fg_color=("#e5ede8", "#e5ede8"),
-                                       hover_color=("#84b898", "#84b898"), text_color=("#1d1f2b"), command=self.start_scraping)
+                                       hover_color=("#84b898", "#84b898"), text_color=("#1d1f2b"), command=self.downloadtxt)
         self.downloadCSV.place(relx=0.5, rely=0.91, anchor="center")
 
 
@@ -97,6 +97,25 @@ class Stork(ctk.CTk):
 
     def get_file_location_for_cities(self):
         return self.locationoutput.get(0.1, ctk.END)
+    
+    def downloadtxt(self):
+        text_content = self.scraperOp.get(0.1, ctk.END)
+
+        # Ask the user to select a file location
+        file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
+
+        # If the user cancels the dialog, return
+        if not file_path:
+            return
+
+        try:
+            # Write the text content to the selected file
+            with open(file_path, 'w') as file:
+                file.write(text_content)
+
+            self.scraperOp.insert(f"File saved successfully at: {file_path}")
+        except Exception as e:
+            print(f"Error saving file: {e}")
 
     def display_error(self, error_message):
         self.scraperOp.insert("0.0", f"Error: {error_message}\n")
