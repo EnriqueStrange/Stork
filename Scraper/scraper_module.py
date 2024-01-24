@@ -73,15 +73,14 @@ def extract_coordinates_from_url(url: str) -> tuple[float,float]:
     # return latitude, longitude
     return float(coordinates.split(',')[0]), float(coordinates.split(',')[1])
 
-def scraper():
+def scrape_google_maps_data(keyword, total_listings, cities_file_path):
     with sync_playwright() as p:
 
-        with open('cities.txt') as f:
+        with open(cities_file_path.strip()) as f:
             for city in f:
                 # For Python3, use print(line)
                 print (city)
                 
-
                 browser = p.chromium.launch(headless=True)
                 page = browser.new_page()
 
@@ -89,7 +88,7 @@ def scraper():
                 # wait is added for dev phase. can remove it in production
                 # page.wait_for_timeout(5000)
 
-                page.locator('//input[@id="searchboxinput"]').fill(search_for + city)
+                page.locator('//input[@id="searchboxinput"]').fill(keyword + city)
                 # page.wait_for_timeout(3000)
 
                 page.keyboard.press("Enter")
@@ -109,7 +108,7 @@ def scraper():
                         page.locator(
                             '//a[contains(@href, "https://www.google.com/maps/place")]'
                         ).count()
-                        >= total
+                        >= total_listings
                     ):
                         listings = page.locator(
                             '//a[contains(@href, "https://www.google.com/maps/place")]'
@@ -201,8 +200,8 @@ def scraper():
                     except Exception as e:
                         print(e)
                 # saving to both excel and csv just to showcase the features.
-                business_list.save_to_excel("google_maps_data")
-                business_list.save_to_csv("google_maps_data")
+                #business_list.save_to_excel("google_maps_data")
+                #business_list.save_to_csv("google_maps_data")
 
                 browser.close()
                 if 'str' in city:
@@ -219,7 +218,7 @@ if __name__ == "__main__":
         search_for = args.search
     else:
         # in case no arguments passed
-        # the scraper will search by defaut for:
+        # the scrape_google_maps_data will search by defaut for:
         search_for = "Coaching "
 
 
@@ -229,4 +228,4 @@ if __name__ == "__main__":
     else:
         total = 1000
 
-    scraper()
+    scrape_google_maps_data()
