@@ -39,6 +39,7 @@ def scrape_google_maps_data(keyword, total_listings, cities_file_path, stop_flag
                     page = browser.new_page()
 
                     page.goto("https://www.google.com/maps", timeout=60000)
+                    
                     page.locator('//input[@id="searchboxinput"]').fill(keyword + city)
                     page.keyboard.press("Enter")
                     page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
