@@ -1,18 +1,21 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from playwright.sync_api import Playwright, sync_playwright
 
 app = Flask(__name__)
 
-def run_playwright(search_query):
+def run_playwright():
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=False)
+        browser = playwright.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
 
         page.goto("https://copilot.microsoft.com/")
-        page.get_by_placeholder("Ask me anything...").fill(search_query + " Return teh response in the codeblock. ")
+        page.get_by_role("radio", name="More Creative").click()
+        page.get_by_label("New topic").click()
+        page.get_by_placeholder("Ask me anything...").fill("Do these things in serial wise. 1. search for masculinesage twitter account. 2. understand his way of writing tweets. 3. only after you are sure how he thinks, write a tweet in his style. return nothing but the tweet in codeblock. keep in mind the twitter word limit. also use no hashtags.")
+
         page.get_by_label("Submit").click()
-        page.locator("cib-muid-consent").click()
+        page.get_by_text("By continuing your").click()
         tweet_data = page.locator("pre").all()[0].inner_text()
         print(tweet_data)
         context.close()
@@ -20,15 +23,10 @@ def run_playwright(search_query):
 
         return tweet_data
 
-@app.route('/get_tweet', methods=['POST'])
+@app.route('/get_tweet', methods=['GET'])
 def get_tweet():
-    try:
-        data = request.get_json()
-        search_query = data['search_query']
-        tweet = run_playwright(search_query)
-        return jsonify({"tweet": tweet})
-    except Exception as e:
-        return jsonify({"error": str(e)})
+    tweet = run_playwright()
+    return jsonify({"tweet": tweet})
 
 if __name__ == '__main__':
     app.run(debug=True)
