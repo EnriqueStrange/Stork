@@ -14,7 +14,6 @@ def run(playwright: Playwright) -> None:
     Data = page.locator("pre").all()[0].inner_text()
     print(Data)
 
-
     # ---------------------
     context.close()
     browser.close()
